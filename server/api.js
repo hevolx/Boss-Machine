@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = express.Router();
-const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase } = require('./db');
+const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase } = require('./db');
 
 const minions = getAllFromDatabase('minions');
 
@@ -8,7 +8,7 @@ const minions = getAllFromDatabase('minions');
 apiRouter.get('/minions', (req, res, next) => {
   res.status(200).send(minions);
   next();
-})
+});
 
 // Get a single minion
 apiRouter.get('/minions/:id', (req, res, next) => {
@@ -20,7 +20,7 @@ apiRouter.get('/minions/:id', (req, res, next) => {
   } else {
     res.status(404).send();
   }
-})
+});
 
 // Update an minion
 apiRouter.put('/minions/:id', (req, res, next) => {
@@ -31,6 +31,18 @@ apiRouter.put('/minions/:id', (req, res, next) => {
     next();
   } else {
     res.status(404).send();
+  }
+});
+
+// Create an minion
+apiRouter.post('/minions', (req, res, next) => {
+  const receivedMinion = addToDatabase('minions', req.body);
+  if (receivedMinion) {
+    minions.push(receivedMinion);
+    res.status(201).send(receivedMinion);
+    next();
+  } else {
+    res.status(400).send();
   }
 });
 
