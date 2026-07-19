@@ -70,6 +70,17 @@ apiRouter.get('/ideas', (req, res, next) => {
   res.status(200).send(ideas);
   next();
 });
+
+// Get a single idea
+apiRouter.get('/ideas/:id', (req, res, next) => {
+  const foundIdea = getFromDatabaseById('ideas', req.params.id);
+  if (foundIdea) {
+    res.status(200).send(foundIdea);
+    next();
+  } else {
+    res.status(404).send();
+  }
+});
 //#endregion
 
 module.exports = apiRouter;
