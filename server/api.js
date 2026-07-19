@@ -106,7 +106,12 @@ apiRouter.put('/ideas/:id', (req, res, next) => {
 
 // Create an idea
 apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
-  const receivedIdea = addToDatabase('ideas', req.body);
+  let receivedIdea;
+  try {
+    receivedIdea = addToDatabase('ideas', req.body);
+  } catch (e) {
+    return res.status(400).send();
+  }
   if (receivedIdea) {
     res.status(201).send(receivedIdea);
     next();
