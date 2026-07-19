@@ -140,11 +140,9 @@ apiRouter.get('/meetings/:id', (req, res, next) => {
   const foundMeeting = getFromDatabaseById('meetings', req.params.id);
   if (foundMeeting) {
     res.status(200).send(foundMeeting);
-    next();
   } else {
     res.status(404).send();
   }
-  return res.status(404).send();
 });
 
 // Create a meeting
