@@ -109,6 +109,17 @@ apiRouter.post('/ideas', (req, res, next) => {
     res.status(400).send();
   }
 });
+
+// Delete an idea
+apiRouter.delete('/ideas/:id', (req, res, next) => {
+  const deleteIdeas = deleteFromDatabasebyId('ideas', req.params.id);
+  if (deleteIdeas) {
+    res.status(204).send(deleteIdeas);
+    next();
+  } else {
+    res.status(404).send();
+  }
+});
 //#endregion
 
 module.exports = apiRouter;
