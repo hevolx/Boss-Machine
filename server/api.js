@@ -2,13 +2,11 @@ const express = require('express');
 const apiRouter = express.Router();
 const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase, deleteFromDatabasebyId } = require('./db');
 const checkMillionDollarIdea = require('./checkMillionDollarIdea');
-const minions = getAllFromDatabase('minions');
-const ideas = getAllFromDatabase('ideas');
 
 // #region "/api/minions"
 // Get all minions
 apiRouter.get('/minions', (req, res, next) => {
-  res.status(200).send(minions);
+  res.status(200).send(getAllFromDatabase('minions'));
   next();
 });
 
@@ -67,7 +65,7 @@ apiRouter.delete('/minions/:id', (req, res, next) => {
 // #region "/api/ideas"
 // Get all ideas
 apiRouter.get('/ideas', (req, res, next) => {
-  res.status(200).send(ideas);
+  res.status(200).send(getAllFromDatabase('ideas'));
   next();
 });
 
