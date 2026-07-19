@@ -1,7 +1,7 @@
 const express = require('express');
 const apiRouter = express.Router();
 const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase, deleteFromDatabasebyId } = require('./db');
-
+const checkMillionDollarIdea = require('./checkMillionDollarIdea');
 const minions = getAllFromDatabase('minions');
 const ideas = getAllFromDatabase('ideas');
 
@@ -100,7 +100,7 @@ apiRouter.put('/ideas/:id', (req, res, next) => {
 });
 
 // Create an idea
-apiRouter.post('/ideas', (req, res, next) => {
+apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
   const receivedIdea = addToDatabase('ideas', req.body);
   if (receivedIdea) {
     res.status(201).send(receivedIdea);
