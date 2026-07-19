@@ -81,6 +81,23 @@ apiRouter.get('/ideas/:id', (req, res, next) => {
     res.status(404).send();
   }
 });
+
+// Update an idea
+apiRouter.put('/ideas/:id', (req, res, next) => {
+  const initialIdea = getFromDatabaseById('ideas', req.params.id);
+  if (initialIdea) {
+    req.body.id = req.params.id;
+    let updatedIdeaInfo = updateInstanceInDatabase('ideas', req.body);
+    if (updatedIdeaInfo) {
+      res.status(200).send(updatedIdeaInfo);
+      next();
+    } else {
+      res.status(400).send();
+    }
+  } else {
+    res.status(404).send();
+  }
+});
 //#endregion
 
 module.exports = apiRouter;
