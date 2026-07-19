@@ -147,7 +147,7 @@ apiRouter.get('/meetings/:id', (req, res, next) => {
   return res.status(404).send();
 });
 
-// Create an meeting
+// Create a meeting
 apiRouter.post('/meetings', (req, res, next) => {
   let receivedMeeting;
   try {
@@ -163,13 +163,10 @@ apiRouter.post('/meetings', (req, res, next) => {
   }
 });
 
-// Delete an meeting
+// Delete a meeting
 apiRouter.delete('/meetings', (req, res, next) => {
-  const didDeleteMeetings = deleteAllFromDatabase('meetings');
-  if (didDeleteMeetings) {
-    return res.sendStatus(204);
-  }
-  return res.status(404).send();
+  deleteAllFromDatabase('meetings');
+  return res.sendStatus(204);
 });
 // #endregion
 module.exports = apiRouter;
