@@ -1,14 +1,12 @@
 const express = require('express');
 const apiRouter = express.Router();
 const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase, deleteFromDatabasebyId } = require('./db');
-
-const minions = getAllFromDatabase('minions');
-const ideas = getAllFromDatabase('ideas');
+const checkMillionDollarIdea = require('./checkMillionDollarIdea');
 
 // #region "/api/minions"
 // Get all minions
 apiRouter.get('/minions', (req, res, next) => {
-  res.status(200).send(minions);
+  res.status(200).send(getAllFromDatabase('minions'));
   next();
 });
 
@@ -67,7 +65,7 @@ apiRouter.delete('/minions/:id', (req, res, next) => {
 // #region "/api/ideas"
 // Get all ideas
 apiRouter.get('/ideas', (req, res, next) => {
-  res.status(200).send(ideas);
+  res.status(200).send(getAllFromDatabase('ideas'));
   next();
 });
 
@@ -87,7 +85,12 @@ apiRouter.put('/ideas/:id', (req, res, next) => {
   const initialIdea = getFromDatabaseById('ideas', req.params.id);
   if (initialIdea) {
     req.body.id = req.params.id;
-    let updatedIdeaInfo = updateInstanceInDatabase('ideas', req.body);
+    let updatedIdeaInfo;
+    try {
+      updatedIdeaInfo = updateInstanceInDatabase('ideas', req.body);
+    } catch (e) {
+      return res.status(400).send();
+    }
     if (updatedIdeaInfo) {
       res.status(200).send(updatedIdeaInfo);
       next();
@@ -100,8 +103,13 @@ apiRouter.put('/ideas/:id', (req, res, next) => {
 });
 
 // Create an idea
-apiRouter.post('/ideas', (req, res, next) => {
-  const receivedIdea = addToDatabase('ideas', req.body);
+apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
+  let receivedIdea;
+  try {
+    receivedIdea = addToDatabase('ideas', req.body);
+  } catch (e) {
+    return res.status(400).send();
+  }
   if (receivedIdea) {
     res.status(201).send(receivedIdea);
     next();
@@ -112,13 +120,11 @@ apiRouter.post('/ideas', (req, res, next) => {
 
 // Delete an idea
 apiRouter.delete('/ideas/:id', (req, res, next) => {
-  const deleteIdeas = deleteFromDatabasebyId('ideas', req.params.id);
-  if (deleteIdeas) {
-    res.status(204).send(deleteIdeas);
-    next();
-  } else {
-    res.status(404).send();
+  const didDeleteIdea = deleteFromDatabasebyId('ideas', req.params.id);
+  if (didDeleteIdea) {
+    return res.sendStatus(204);
   }
+  return res.status(404).send();
 });
 //#endregion
 
