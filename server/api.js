@@ -9,4 +9,15 @@ apiRouter.get('/minions', (req, res, next) => {
   next();
 })
 
+apiRouter.get('/minions/:id', (req, res, next) => {
+  const foundMinion = getFromDatabaseById('minions', req.params.id);
+
+  if (foundMinion) {
+    res.status(200).send(foundMinion);
+    next();
+  } else {
+    res.status(404).send();
+  }
+})
+
 module.exports = apiRouter;
