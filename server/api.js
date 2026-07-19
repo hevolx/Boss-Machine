@@ -26,9 +26,14 @@ apiRouter.get('/minions/:id', (req, res, next) => {
 apiRouter.put('/minions/:id', (req, res, next) => {
   const initialMinion = getFromDatabaseById('minions', req.params.id);
   if (initialMinion) {
+    req.body.id = req.params.id;
     let updatedMinionInfo = updateInstanceInDatabase('minions', req.body);
-    res.status(201).send(updatedMinionInfo);
-    next();
+    if (updatedMinionInfo) {
+      res.send(updatedMinionInfo);
+      next();
+    } else {
+      res.status(400).send();
+    }
   } else {
     res.status(404).send();
   }
@@ -38,7 +43,6 @@ apiRouter.put('/minions/:id', (req, res, next) => {
 apiRouter.post('/minions', (req, res, next) => {
   const receivedMinion = addToDatabase('minions', req.body);
   if (receivedMinion) {
-    minions.push(receivedMinion);
     res.status(201).send(receivedMinion);
     next();
   } else {
@@ -50,8 +54,7 @@ apiRouter.post('/minions', (req, res, next) => {
 apiRouter.delete('/minions/:id', (req, res, next) => {
   const deleteMinion = deleteFromDatabasebyId('minions', req.params.id);
   if (deleteMinion) {
-    let deletedMinion = minions.splice(deleteMinion, 1);
-    res.status(204).send(deletedMinion);
+    res.status(204).send(deleteMinion);
     next();
   } else {
     res.status(404).send();
