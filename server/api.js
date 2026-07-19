@@ -1,6 +1,6 @@
 const express = require('express');
 const apiRouter = express.Router();
-const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase, deleteFromDatabasebyId } = require('./db');
+const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase, deleteFromDatabasebyId, deleteAllFromDatabase, createMeeting } = require('./db');
 const checkMillionDollarIdea = require('./checkMillionDollarIdea');
 
 // #region "/api/minions"
@@ -126,6 +126,25 @@ apiRouter.delete('/ideas/:id', (req, res, next) => {
   }
   return res.status(404).send();
 });
-//#endregion
+// #endregion
 
+// #region "/api/meetings"
+// Get all meetings
+apiRouter.get('/meetings', (req, res, next) => {
+  res.status(200).send(getAllFromDatabase('meetings'));
+  next();
+});
+
+// Get a single meeting
+apiRouter.get('/meetings/:id', (req, res, next) => {
+  const foundMeeting = getFromDatabaseById('meetings', req.params.id);
+  if (foundMeeting) {
+    res.status(200).send(foundMeeting);
+    next();
+  } else {
+    res.status(404).send();
+  }
+});
+
+// #endregion
 module.exports = apiRouter;
