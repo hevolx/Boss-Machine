@@ -87,7 +87,12 @@ apiRouter.put('/ideas/:id', (req, res, next) => {
   const initialIdea = getFromDatabaseById('ideas', req.params.id);
   if (initialIdea) {
     req.body.id = req.params.id;
-    let updatedIdeaInfo = updateInstanceInDatabase('ideas', req.body);
+    let updatedIdeaInfo;
+    try {
+      updatedIdeaInfo = updateInstanceInDatabase('ideas', req.body);
+    } catch (e) {
+      return res.status(400).send();
+    }
     if (updatedIdeaInfo) {
       res.status(200).send(updatedIdeaInfo);
       next();
