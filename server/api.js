@@ -98,6 +98,17 @@ apiRouter.put('/ideas/:id', (req, res, next) => {
     res.status(404).send();
   }
 });
+
+// Create an idea
+apiRouter.post('/ideas', (req, res, next) => {
+  const receivedIdea = addToDatabase('ideas', req.body);
+  if (receivedIdea) {
+    res.status(201).send(receivedIdea);
+    next();
+  } else {
+    res.status(400).send();
+  }
+});
 //#endregion
 
 module.exports = apiRouter;
