@@ -112,13 +112,11 @@ apiRouter.post('/ideas', checkMillionDollarIdea, (req, res, next) => {
 
 // Delete an idea
 apiRouter.delete('/ideas/:id', (req, res, next) => {
-  const deleteIdeas = deleteFromDatabasebyId('ideas', req.params.id);
-  if (deleteIdeas) {
-    res.status(204).send(deleteIdeas);
-    next();
-  } else {
-    res.status(404).send();
+  const didDeleteIdea = deleteFromDatabasebyId('ideas', req.params.id);
+  if (didDeleteIdea) {
+    return res.sendStatus(204);
   }
+  return res.status(404).send();
 });
 //#endregion
 
