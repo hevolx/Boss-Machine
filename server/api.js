@@ -3,7 +3,9 @@ const apiRouter = express.Router();
 const { getAllFromDatabase, getFromDatabaseById, updateInstanceInDatabase, addToDatabase, deleteFromDatabasebyId } = require('./db');
 
 const minions = getAllFromDatabase('minions');
+const ideas = getAllFromDatabase('ideas');
 
+// #region "/api/minions"
 // Get all minions
 apiRouter.get('/minions', (req, res, next) => {
   res.status(200).send(minions);
@@ -29,7 +31,7 @@ apiRouter.put('/minions/:id', (req, res, next) => {
     req.body.id = req.params.id;
     let updatedMinionInfo = updateInstanceInDatabase('minions', req.body);
     if (updatedMinionInfo) {
-      res.send(updatedMinionInfo);
+      res.status(200).send(updatedMinionInfo);
       next();
     } else {
       res.status(400).send();
@@ -60,5 +62,14 @@ apiRouter.delete('/minions/:id', (req, res, next) => {
     res.status(404).send();
   }
 });
+// #endregion
+
+// #region "/api/ideas"
+// Get all ideas
+apiRouter.get('/ideas', (req, res, next) => {
+  res.status(200).send(ideas);
+  next();
+});
+//#endregion
 
 module.exports = apiRouter;
