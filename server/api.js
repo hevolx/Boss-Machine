@@ -144,6 +144,7 @@ apiRouter.get('/meetings/:id', (req, res, next) => {
   } else {
     res.status(404).send();
   }
+  return res.status(404).send();
 });
 
 // Create an meeting
