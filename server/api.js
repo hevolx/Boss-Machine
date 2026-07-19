@@ -162,5 +162,13 @@ apiRouter.post('/meetings', (req, res, next) => {
   }
 });
 
+// Delete an meeting
+apiRouter.delete('/meetings', (req, res, next) => {
+  const didDeleteMeetings = deleteAllFromDatabase('meetings');
+  if (didDeleteMeetings) {
+    return res.sendStatus(204);
+  }
+  return res.status(404).send();
+});
 // #endregion
 module.exports = apiRouter;
