@@ -146,5 +146,21 @@ apiRouter.get('/meetings/:id', (req, res, next) => {
   }
 });
 
+// Create an meeting
+apiRouter.post('/meetings', (req, res, next) => {
+  let receivedMeeting;
+  try {
+    receivedMeeting = addToDatabase('meetings', createMeeting());
+  } catch (e) {
+    return res.status(400).send();
+  }
+  if (receivedMeeting) {
+    res.status(201).send(receivedMeeting);
+    next();
+  } else {
+    res.status(400).send();
+  }
+});
+
 // #endregion
 module.exports = apiRouter;
